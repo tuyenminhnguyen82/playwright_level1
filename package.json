@@ -17,6 +17,8 @@
   "homepage": "https://github.com/tuyenminhnguyen82/playwright_level1#readme",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
-    "@types/node": "^24.8.1"
+    "@types/node": "^24.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
