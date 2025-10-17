@@ -1,0 +1,22 @@
+{
+  "name": "playwright_level1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuyenminhnguyen82/playwright_level1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tuyenminhnguyen82/playwright_level1/issues"
+  },
+  "homepage": "https://github.com/tuyenminhnguyen82/playwright_level1#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.8.1"
+  }
+}
