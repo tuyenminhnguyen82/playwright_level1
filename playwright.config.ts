@@ -32,6 +32,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     headless: false,
     screenshot: 'only-on-failure',
+    baseURL: 'https://demo.testarchitect.com/',
   },
 
   /* Configure projects for major browsers */

@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export class ShoppingCartPage {
   readonly page: Page;
@@ -10,13 +10,13 @@ export class ShoppingCartPage {
   }
 
   async verify_product_added(productName: string) {
-    await this.page.getByRole('link', { 
-          name: `Add “${productName}`
-        }).isVisible();
+    await expect(this.page.getByRole('link', { 
+          name: `${productName}`
+        })).toBeVisible();
   }
 
   async proceedToCheckout() {
-    await this.proceed_to_checkout_link.isVisible();
+    await expect(this.proceed_to_checkout_link).toBeVisible();
     await this.proceed_to_checkout_link.click();
   }
 }

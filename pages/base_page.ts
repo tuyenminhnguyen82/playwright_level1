@@ -12,7 +12,7 @@ export class BasePage {
   }
 
   async navigate() {
-    await this.page.goto('https://demo.testarchitect.com/', { waitUntil: 'domcontentloaded' });
+    await this.page.goto('/', { waitUntil: 'domcontentloaded' });
     await this.first_popup_close_button.click();
   }
 

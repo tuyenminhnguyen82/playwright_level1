@@ -30,7 +30,7 @@ export class ProductsPage {
 
   async clickGridView(){
     await this.grid_icon.click();
-    await this.page.waitForTimeout(3000); 
+    await this.page.waitForLoadState('networkidle');
   }
 
   async verifyProductsGridVisible(){
@@ -39,7 +39,7 @@ export class ProductsPage {
 
   async clickListView(){
     await this.list_icon.click();
-    await this.page.waitForTimeout(3000); 
+    await this.page.waitForLoadState('networkidle');
   }
   async verifyProductsListVisible(){
     await expect(this.products_list).toBeVisible();

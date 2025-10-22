@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import BillingDetails from '../../models/billing_details';
 
 export class CheckoutPage {
   readonly page: Page;
@@ -41,14 +42,14 @@ export class CheckoutPage {
     })).toBeVisible();
   }
 
-  async fillBillingDetails(firstName: string, lastName: string, streetAddress: string, townCity: string, zipCode: string, phone: string, emailAddress: string, paymentMethod: string) {
-    await this.first_name_txt.fill(firstName);
-    await this.last_name_txt.fill(lastName);
-    await this.street_address_txt.fill(streetAddress);
-    await this.town_city_txt.fill(townCity);
-    await this.zip_code_txt.fill(zipCode);
-    await this.phone_txt.fill(phone);
-    await this.email_address_txt.fill(emailAddress);
+  async fillBillingDetails(billingDetails: BillingDetails, paymentMethod: string) {
+    await this.first_name_txt.fill(billingDetails.firstName);
+    await this.last_name_txt.fill(billingDetails.lastName);
+    await this.street_address_txt.fill(billingDetails.streetAddress);
+    await this.town_city_txt.fill(billingDetails.city);
+    await this.zip_code_txt.fill(billingDetails.postalCode);
+    await this.phone_txt.fill(billingDetails.phone);
+    await this.email_address_txt.fill(billingDetails.email);
     if (paymentMethod === 'Direct bank transfer') {
       await this.payment_method_direct_bank.check();
     } else if (paymentMethod === 'Check payments') {
@@ -60,5 +61,6 @@ export class CheckoutPage {
 
   async placeOrder() {
     await this.place_order_button.click();
+    this.page.waitForLoadState('networkidle');
   }
 }

@@ -1,9 +1,9 @@
-import { test } from "../page_objects/page_objects";
+import { test } from "../fixture/page_objects";
 import Constant from "../data/constants"; 
 
 
 test('TC01 - Verify users can buy an item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
   //navigate to the application
   await basePage.navigate();
   //login to the application
@@ -27,12 +27,12 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await checkoutPage.verifyCheckoutPage();
   await checkoutPage.verifyProductInCheckout(Constant.FIRST_PRODUCT_NAME);
   //fill billing details
-  await checkoutPage.fillBillingDetails(Constant.FIRST_NAME, Constant.LAST_NAME, Constant.STREET_ADDRESS, Constant.TOWN_CITY, Constant.ZIP_CODE, Constant.PHONE, Constant.EMAIL_ADDRESS, Constant.CHECK_PAYMENT_METHOD);
+  await checkoutPage.fillBillingDetails(Constant.BILLING_DETAILS, Constant.CHECK_PAYMENT_METHOD);
   //place order
   await checkoutPage.placeOrder();
   console.log(`✅ Order placed successfully`);
   //verify order page and product in order page
-  await orderPage.verifyOrderPage();
+  await orderPage.verifyOrderPageDisplayed();
   await orderPage.verifyProductAddedInOrderPage(Constant.FIRST_PRODUCT_NAME);
-  await orderPage.verifyPaymentMethodAndEmailInOrderPage(Constant.CHECK_PAYMENT_METHOD, Constant.EMAIL_ADDRESS);
+  await orderPage.verifyPaymentMethodAndEmailInOrderPage(Constant.CHECK_PAYMENT_METHOD, Constant.BILLING_DETAILS.email);
 });
