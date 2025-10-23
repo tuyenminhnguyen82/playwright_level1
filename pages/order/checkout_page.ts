@@ -61,6 +61,6 @@ export class CheckoutPage {
 
   async placeOrder() {
     await this.place_order_button.click();
-    this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('networkidle');
   }
 }
