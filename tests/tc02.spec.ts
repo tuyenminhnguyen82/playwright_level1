@@ -17,7 +17,7 @@ test('TC02 - Verify users can buy multiple item successfully', async ({ basePage
       '0123456789',
       'tuyen.minh.nguyen@agest.vn'
   );
-  const paymentMethod = PaymentMethod.Check;
+  const paymentMethod = PaymentMethod.Cash;
   //navigate to the application
   await basePage.navigate();
   //login to the application
