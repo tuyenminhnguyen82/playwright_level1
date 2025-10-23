@@ -10,6 +10,7 @@ export class ShoppingCartPage {
   }
 
   async verifyProductAdded(productName: string) {
+    await this.page.waitForLoadState('networkidle');
     await expect(this.page.getByRole('link', { 
           name: `${productName}`
         })).toBeVisible();

@@ -50,6 +50,7 @@ export class ProductsPage {
       name: `Add “${productName}` 
       }).nth(1)
     ).click();
+    await this.page.waitForLoadState('networkidle');
   }
 
   async verifyProductAddedSuccessfully(){
