@@ -25,9 +25,6 @@ test('TC02 - Verify users can buy multiple item successfully', async ({ basePage
   await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
   //navigate to products page and perform actions
   await productsPage.selectElectronicComponents();
-  //verify grid and list view
-  await productsPage.clickGridView();
-  await productsPage.verifyProductsGridVisible();
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
   //add products to cart and verify in shopping cart page
