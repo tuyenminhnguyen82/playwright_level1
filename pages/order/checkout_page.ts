@@ -32,6 +32,15 @@ export class CheckoutPage {
     this.payment_method_cash = page.getByRole('radio', { name: 'Cash on delivery' });
   }
 
+  private getPaymentMethodLocator(paymentMethod: PaymentMethod): Locator {
+    const locatorMap: Record<PaymentMethod, Locator> = {
+      [PaymentMethod.Bank]: this.payment_method_direct_bank,
+      [PaymentMethod.Check]: this.payment_method_check,
+      [PaymentMethod.Cash]: this.payment_method_cash
+    };
+    return locatorMap[paymentMethod];
+  }
+
   async verifyCheckoutPage() {
     await expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
   }
@@ -50,14 +59,9 @@ export class CheckoutPage {
     await this.zip_code_txt.fill(billingDetails.postalCode);
     await this.phone_txt.fill(billingDetails.phone);
     await this.email_address_txt.fill(billingDetails.email);
-    if (paymentMethod === PaymentMethod.Bank) {
-      await this.payment_method_direct_bank.check();
-    } else if (paymentMethod === PaymentMethod.Check) {
-      await this.payment_method_check.check();
-    } else if (paymentMethod === PaymentMethod.Cash) {
-      await this.payment_method_cash.check();
-    } 
-  }
+    const paymentMethodLocator = this.getPaymentMethodLocator(paymentMethod);
+      await paymentMethodLocator.check();
+    }
 
   async placeOrder() {
     await this.place_order_button.click();
