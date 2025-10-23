@@ -9,7 +9,7 @@ export class ShoppingCartPage {
     this.proceed_to_checkout_link = page.getByRole('link', { name: 'Proceed to checkout' });
   }
 
-  async verify_product_added(productName: string) {
+  async verifyProductAdded(productName: string) {
     await expect(this.page.getByRole('link', { 
           name: `${productName}`
         })).toBeVisible();

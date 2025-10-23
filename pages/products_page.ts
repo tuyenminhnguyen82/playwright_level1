@@ -50,9 +50,12 @@ export class ProductsPage {
       name: `Add “${productName}` 
       }).nth(1)
     ).click();
+  }
 
+  async verifyProductAddedSuccessfully(){
     await expect(this.product_added_text).toBeVisible();
   }
+  
   async clickCart(){
     await this.cart_icon.click();
   }

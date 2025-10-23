@@ -18,9 +18,9 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await productsPage.verifyProductsListVisible();
   //add first product to cart and verify in shopping cart page
   await productsPage.addProduct(Constant.FIRST_PRODUCT_NAME);
-  console.log(`✅ Added product: ${Constant.FIRST_PRODUCT_NAME}`);
+  await productsPage.verifyProductAddedSuccessfully();
   await productsPage.clickCart();
-  await shoppingCartPage.verify_product_added(Constant.FIRST_PRODUCT_NAME);
+  await shoppingCartPage.verifyProductAdded(Constant.FIRST_PRODUCT_NAME);
   //proceed to checkout
   await shoppingCartPage.proceedToCheckout();
   //verify checkout page and product in checkout page
@@ -30,7 +30,6 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await checkoutPage.fillBillingDetails(Constant.BILLING_DETAILS, Constant.CHECK_PAYMENT_METHOD);
   //place order
   await checkoutPage.placeOrder();
-  console.log(`✅ Order placed successfully`);
   //verify order page and product in order page
   await orderPage.verifyOrderPageDisplayed();
   await orderPage.verifyProductAddedInOrderPage(Constant.FIRST_PRODUCT_NAME);
