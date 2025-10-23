@@ -1,9 +1,21 @@
 import { test } from "../fixture/page_objects";
 import Constant from "../data/constants"; 
+import { BillingDetails, PaymentMethod } from "../models/billing_details"; 
 
 
 test('TC01 - Verify users can buy an item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
+  const productName = "Canon i-SENSYS LBP6030W";
+  const billingDetails = new BillingDetails(
+      'Tuyen',
+      'Nguyen',
+      'Tran Quoc Toan',
+      'Da Nang',
+      '11111',
+      '0123456789',
+      'tuyen.minh.nguyen@agest.vn'
+  );
+  const paymentMethod = PaymentMethod.Check;
   //navigate to the application
   await basePage.navigate();
   //login to the application
@@ -17,21 +29,21 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
   //add first product to cart and verify in shopping cart page
-  await productsPage.addProduct(Constant.FIRST_PRODUCT_NAME);
+  await productsPage.addProduct(productName);
   await productsPage.verifyProductAddedSuccessfully();
   await productsPage.clickCart();
-  await shoppingCartPage.verifyProductAdded(Constant.FIRST_PRODUCT_NAME);
+  await shoppingCartPage.verifyProductAdded(productName);
   //proceed to checkout
   await shoppingCartPage.proceedToCheckout();
   //verify checkout page and product in checkout page
   await checkoutPage.verifyCheckoutPage();
-  await checkoutPage.verifyProductInCheckout(Constant.FIRST_PRODUCT_NAME);
+  await checkoutPage.verifyProductInCheckout(productName);
   //fill billing details
-  await checkoutPage.fillBillingDetails(Constant.BILLING_DETAILS, Constant.CHECK_PAYMENT_METHOD);
+  await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
   //place order
   await checkoutPage.placeOrder();
   //verify order page and product in order page
   await orderPage.verifyOrderPageDisplayed();
-  await orderPage.verifyProductAddedInOrderPage(Constant.FIRST_PRODUCT_NAME);
-  await orderPage.verifyPaymentMethodAndEmailInOrderPage(Constant.CHECK_PAYMENT_METHOD, Constant.BILLING_DETAILS.email);
+  await orderPage.verifyProductAddedInOrderPage(productName);
+  await orderPage.verifyPaymentMethodAndEmailInOrderPage(paymentMethod, billingDetails.email);
 });

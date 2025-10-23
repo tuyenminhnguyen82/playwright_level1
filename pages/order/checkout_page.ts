@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import BillingDetails from '../../models/billing_details';
+import {BillingDetails, PaymentMethod} from '../../models/billing_details';
 
 export class CheckoutPage {
   readonly page: Page;
@@ -42,7 +42,7 @@ export class CheckoutPage {
     })).toBeVisible();
   }
 
-  async fillBillingDetails(billingDetails: BillingDetails, paymentMethod: string) {
+  async fillBillingDetails(billingDetails: BillingDetails, paymentMethod: PaymentMethod) {
     await this.first_name_txt.fill(billingDetails.firstName);
     await this.last_name_txt.fill(billingDetails.lastName);
     await this.street_address_txt.fill(billingDetails.streetAddress);
@@ -50,11 +50,11 @@ export class CheckoutPage {
     await this.zip_code_txt.fill(billingDetails.postalCode);
     await this.phone_txt.fill(billingDetails.phone);
     await this.email_address_txt.fill(billingDetails.email);
-    if (paymentMethod === 'Direct bank transfer') {
+    if (paymentMethod === PaymentMethod.Bank) {
       await this.payment_method_direct_bank.check();
-    } else if (paymentMethod === 'Check payments') {
+    } else if (paymentMethod === PaymentMethod.Check) {
       await this.payment_method_check.check();
-    } else if (paymentMethod === 'Cash on delivery') {
+    } else if (paymentMethod === PaymentMethod.Cash) {
       await this.payment_method_cash.check();
     } 
   }

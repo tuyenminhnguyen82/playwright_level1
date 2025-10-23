@@ -1,4 +1,4 @@
-export default class BillingDetails {
+export class BillingDetails {
   constructor(
     public firstName: string,
     public lastName: string,
@@ -8,4 +8,10 @@ export default class BillingDetails {
     public phone: string,
     public email: string
   ) {}
+}
+
+export enum PaymentMethod {
+  Check = 'Check payments',
+  Bank = 'Direct bank transfer',
+  Cash = 'Cash on delivery',
 }
