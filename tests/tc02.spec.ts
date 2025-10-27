@@ -5,11 +5,6 @@ import { BillingDetails, PaymentMethod } from "../models/billing_details";
 
 test('TC02 - Verify users can buy multiple item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
-  const productList = [
-    'Canon i-SENSYS LBP6030W',
-    'DJI Mavic Pro Camera',
-    'DJI Phantom 4 Camera'
-  ];
   const billingDetails = new BillingDetails(
       'Tuyen',
       'Nguyen',
@@ -30,7 +25,7 @@ test('TC02 - Verify users can buy multiple item successfully', async ({ basePage
   await productsPage.selectElectronicComponents();
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
-  await productsPage.addProducts(productList);  
+  const productList = await productsPage.addRandomProducts(3);  
   await productsPage.clickCart();
   await shoppingCartPage.verifyProductsAdded(productList);
   //proceed to checkout

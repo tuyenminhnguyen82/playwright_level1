@@ -5,7 +5,6 @@ import { BillingDetails, PaymentMethod } from "../models/billing_details";
 
 test('TC01 - Verify users can buy an item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
-  const productName = "Canon i-SENSYS LBP6030W";
   const billingDetails = new BillingDetails(
       'Tuyen',
       'Nguyen',
@@ -30,7 +29,7 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
   //add first product to cart and verify in shopping cart page
-  await productsPage.addProducts(productName);
+  const productName = await productsPage.addRandomProducts(1);
   await productsPage.clickCart();
   await shoppingCartPage.verifyProductsAdded(productName);
   //proceed to checkout

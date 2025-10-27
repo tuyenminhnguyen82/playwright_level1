@@ -27,6 +27,7 @@ export class ProductsPage extends BasePage {
     this.only_remove_bt = page.getByRole('link', { name: 'Remove' });    
     this.first_remove_bt = page.getByRole('link', { name: 'Remove' }).first();    
     this.clear_cart_bt = page.getByText('Clear shopping cart');
+
   }
 
   async selectElectronicComponents(){
@@ -80,6 +81,45 @@ export class ProductsPage extends BasePage {
       await expect(this.product_added_text).toBeVisible({ timeout: 5000 });
       await expect(addButton).toBeVisible();
     }
+  }
+
+  async addRandomProducts(numberOfProducts: number): Promise<string[]> {
+    // Find all visible "Add to cart" buttons
+    const addButtons = this.page.locator('a.add_to_cart_button');
+    const count = await addButtons.count();
+
+    if (count === 0) {
+      throw new Error("❌ No 'Add to cart' buttons found on the page.");
+    }
+
+    // Determine how many products to add
+    const productsToAdd = Math.min(numberOfProducts, count);
+
+    // Pick unique random indexes
+    const selectedIndexes = new Set<number>();
+    while (selectedIndexes.size < productsToAdd) {
+      selectedIndexes.add(Math.floor(Math.random() * count));
+    }
+
+    const addedProducts: string[] = [];
+
+    for (const index of selectedIndexes) {
+      const addButton = addButtons.nth(index);
+
+      // Extract product name from the 'data-product_name' attribute
+      const productName = (await addButton.getAttribute('data-product_name'))?.trim() || `Product ${index + 1}`;
+
+      // Scroll to the element and click it
+      await addButton.scrollIntoViewIfNeeded();
+      await addButton.click();
+
+      // Wait for product-added confirmation (custom locator from your page object)
+      await expect(this.product_added_text).toBeVisible({ timeout: 5000 });
+
+      addedProducts.push(productName);
+    }
+
+    return addedProducts;
   }
   
   async clickCart(){
