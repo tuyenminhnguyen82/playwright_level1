@@ -5,9 +5,11 @@ import { BillingDetails, PaymentMethod } from "../models/billing_details";
 
 test('TC02 - Verify users can buy multiple item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
-  const firstProductName = "Canon i-SENSYS LBP6030W";
-  const secondProductName = "DJI Mavic Pro Camera";
-  const thirdProductName = "DJI Phantom 4 Camera";
+  const productList = [
+    'Canon i-SENSYS LBP6030W',
+    'DJI Mavic Pro Camera',
+    'DJI Phantom 4 Camera'
+  ];
   const billingDetails = new BillingDetails(
       'Tuyen',
       'Nguyen',
@@ -23,35 +25,24 @@ test('TC02 - Verify users can buy multiple item successfully', async ({ basePage
   //login to the application
   await basePage.gotoLoginPage();
   await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
+  await productsPage.clearCart();
   //navigate to products page and perform actions
   await productsPage.selectElectronicComponents();
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
-  //add products to cart and verify in shopping cart page
-  await productsPage.addProduct(firstProductName);
-  await productsPage.verifyProductAddedSuccessfully();
-  await productsPage.addProduct(secondProductName);
-  await productsPage.verifyProductAddedSuccessfully();
-  await productsPage.addProduct(thirdProductName);
-  await productsPage.verifyProductAddedSuccessfully();
+  await productsPage.addProducts(productList);  
   await productsPage.clickCart();
-  await shoppingCartPage.verifyProductAdded(firstProductName);
-  await shoppingCartPage.verifyProductAdded(secondProductName);
-  await shoppingCartPage.verifyProductAdded(thirdProductName);
+  await shoppingCartPage.verifyProductsAdded(productList);
   //proceed to checkout
   await shoppingCartPage.proceedToCheckout();
   //verify checkout page and product in checkout page
   await checkoutPage.verifyCheckoutPage();
-  await checkoutPage.verifyProductInCheckout(firstProductName);
-  await checkoutPage.verifyProductInCheckout(secondProductName);
-  await checkoutPage.verifyProductInCheckout(thirdProductName);
+  await checkoutPage.verifyProductsInCheckout(productList);
   //fill billing details
   await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
   //place order
   await checkoutPage.placeOrder();
   //verify order page and product in order page
   await orderPage.verifyOrderPageDisplayed();
-  await orderPage.verifyProductAddedInOrderPage(firstProductName);
-  await orderPage.verifyProductAddedInOrderPage(secondProductName);
-  await orderPage.verifyProductAddedInOrderPage(thirdProductName);
+  await orderPage.verifyProductsInOrderPage(productList);
 });

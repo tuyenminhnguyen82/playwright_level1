@@ -21,6 +21,7 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   //login to the application
   await basePage.gotoLoginPage();
   await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
+  await productsPage.clearCart();
   //navigate to products page and perform actions
   await productsPage.selectElectronicComponents();
   //verify grid and list view
@@ -29,21 +30,20 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
   //add first product to cart and verify in shopping cart page
-  await productsPage.addProduct(productName);
-  await productsPage.verifyProductAddedSuccessfully();
+  await productsPage.addProducts(productName);
   await productsPage.clickCart();
-  await shoppingCartPage.verifyProductAdded(productName);
+  await shoppingCartPage.verifyProductsAdded(productName);
   //proceed to checkout
   await shoppingCartPage.proceedToCheckout();
   //verify checkout page and product in checkout page
   await checkoutPage.verifyCheckoutPage();
-  await checkoutPage.verifyProductInCheckout(productName);
+  await checkoutPage.verifyProductsInCheckout(productName);
   //fill billing details
   await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
   //place order
   await checkoutPage.placeOrder();
   //verify order page and product in order page
   await orderPage.verifyOrderPageDisplayed();
-  await orderPage.verifyProductAddedInOrderPage(productName);
+  await orderPage.verifyProductsInOrderPage(productName);
   await orderPage.verifyPaymentMethodAndEmailInOrderPage(paymentMethod, billingDetails.email);
 });
