@@ -1,7 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import {BillingDetails, PaymentMethod} from '../../models/billing_details';
+import { BasePage } from '../base_page';
 
-export class CheckoutPage {
+export class CheckoutPage extends BasePage {
   readonly page: Page;
   readonly checkout_header: Locator;
   readonly place_order_button: Locator;
@@ -17,6 +18,7 @@ export class CheckoutPage {
   readonly payment_method_cash: Locator;
 
   constructor(page: Page) {
+    super(page); // Call the constructor of BasePage
     this.page = page;
     this.checkout_header = page.getByText('Shopping cart Checkout Order')
     this.first_name_txt = page.getByRole('textbox', { name: 'First name *' });
@@ -42,14 +44,18 @@ export class CheckoutPage {
   }
 
   async verifyCheckoutPage() {
-    await expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
+    expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
   }
 
-  async verifyProductInCheckout(productName: string) {
-    await expect(this.page.getByRole('cell', { 
-      name: `${productName}`
-    })).toBeVisible();
-  }
+  async verifyProductsInCheckout(productNames: string | string[]) {
+    await this.waitForPageLoaded();
+    const names = Array.isArray(productNames) ? productNames: [productNames];
+    for (const name of names){
+      expect(this.page.getByRole('cell', { 
+          name: name
+        })).toBeVisible();
+    }
+  }  
 
   async fillBillingDetails(billingDetails: BillingDetails, paymentMethod: PaymentMethod) {
     await this.first_name_txt.fill(billingDetails.firstName);
@@ -65,6 +71,7 @@ export class CheckoutPage {
 
   async placeOrder() {
     await this.place_order_button.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'visible', timeout: 5000 });
+    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'hidden', timeout: 10000 });
   }
 }

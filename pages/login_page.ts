@@ -1,12 +1,14 @@
 import { type Locator, type Page } from '@playwright/test';
+import { BasePage } from './base_page';
 
-export class LoginPage {
+export class LoginPage extends BasePage {
   readonly page: Page;  
   readonly username_txt: Locator;
   readonly password_txt: Locator;
   readonly login_bt: Locator;
 
   constructor(page: Page) {
+    super(page); // Call the constructor of BasePage
     this.page = page;
     this.username_txt = page.getByRole('textbox', { name: 'Username or email address *' });
     this.password_txt = page.getByRole('textbox', { name: 'Password *' });

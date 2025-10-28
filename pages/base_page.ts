@@ -4,13 +4,18 @@ export class BasePage {
   readonly page: Page;
   readonly first_popup_close_button: Locator;
   readonly login_signup_link: Locator;
+  readonly cart_icon: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.first_popup_close_button = page.getByRole('button', { name: 'Close' });
     this.login_signup_link = page.getByRole('link', { name: 'Log in / Sign up' });
+    this.cart_icon =  page.getByRole('link', { name:  /\$/ });
   }
 
+  async waitForPageLoaded(timeout: number = 10000): Promise<void> {
+    await this.page.waitForLoadState('networkidle', { timeout });
+  }
   async navigate() {
     await this.page.goto('/', { waitUntil: 'domcontentloaded' });
     await this.first_popup_close_button.click();

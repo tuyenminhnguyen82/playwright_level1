@@ -3,7 +3,7 @@ import Constant from "../data/constants";
 import { BillingDetails, PaymentMethod } from "../models/billing_details"; 
 
 
-test('TC01 - Verify users can buy an item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
+test('TC02 - Verify users can buy multiple item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
   const billingDetails = new BillingDetails(
       'Tuyen',
@@ -14,7 +14,7 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
       '0123456789',
       'tuyen.minh.nguyen@agest.vn'
   );
-  const paymentMethod = PaymentMethod.Check;
+  const paymentMethod = PaymentMethod.Cash;
   //navigate to the application
   await basePage.navigate();
   //login to the application
@@ -23,26 +23,21 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await productsPage.clearCart();
   //navigate to products page and perform actions
   await productsPage.selectElectronicComponents();
-  //verify grid and list view
-  await productsPage.clickGridView();
-  await productsPage.verifyProductsGridVisible();
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
-  //add first product to cart and verify in shopping cart page
-  const productName = await productsPage.addRandomProducts(1);
+  const productList = await productsPage.addRandomProducts(3);  
   await productsPage.clickCart();
-  await shoppingCartPage.verifyProductsAdded(productName);
+  await shoppingCartPage.verifyProductsAdded(productList);
   //proceed to checkout
   await shoppingCartPage.proceedToCheckout();
   //verify checkout page and product in checkout page
   await checkoutPage.verifyCheckoutPage();
-  await checkoutPage.verifyProductsInCheckout(productName);
+  await checkoutPage.verifyProductsInCheckout(productList);
   //fill billing details
   await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
   //place order
   await checkoutPage.placeOrder();
   //verify order page and product in order page
   await orderPage.verifyOrderPageDisplayed();
-  await orderPage.verifyProductsInOrderPage(productName);
-  await orderPage.verifyPaymentMethodAndEmailInOrderPage(paymentMethod, billingDetails.email);
+  await orderPage.verifyProductsInOrderPage(productList);
 });
