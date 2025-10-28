@@ -19,14 +19,14 @@ export class ShoppingCartPage extends BasePage {
         this.cart_icon.click();
         await this.waitForPageLoaded();
       }
-      await expect(
+      expect(
       this.page.getByRole('link', { name: name })
       ).toBeVisible({ timeout: 10000 });
     }
   }
 
   async proceedToCheckout() {
-    await expect(this.proceed_to_checkout_link).toBeVisible();
+    await this.proceed_to_checkout_link.waitFor({state: 'visible'});
     await this.proceed_to_checkout_link.click();
     await this.waitForPageLoaded();
   }

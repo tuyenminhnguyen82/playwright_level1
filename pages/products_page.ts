@@ -27,7 +27,6 @@ export class ProductsPage extends BasePage {
     this.only_remove_bt = page.getByRole('link', { name: 'Remove' });    
     this.first_remove_bt = page.getByRole('link', { name: 'Remove' }).first();    
     this.clear_cart_bt = page.getByText('Clear shopping cart');
-
   }
 
   async selectElectronicComponents(){
@@ -42,7 +41,7 @@ export class ProductsPage extends BasePage {
   }
 
   async verifyProductsGridVisible(){
-    await expect(this.products_grid).toBeVisible();
+    expect(this.products_grid).toBeVisible();
   }
 
   async clickListView(){
@@ -50,24 +49,17 @@ export class ProductsPage extends BasePage {
     await this.waitForPageLoaded();
   }
   async verifyProductsListVisible(){
-    await expect(this.products_list).toBeVisible();
+    expect(this.products_list).toBeVisible();
   }
 
   async clearCart(){
     await this.cart_icon.click();
     await this.waitForPageLoaded();
-    var clear_cart_bt_exist = await this.clear_cart_bt.count() > 0;
-    while (clear_cart_bt_exist){
-      const first_remove_bt_exist = await this.first_remove_bt.count() > 0;
-      if (first_remove_bt_exist) {
-        await this.first_remove_bt.click();
-        await this.waitForPageLoaded();
-      }
-      else {
-        await this.only_remove_bt.click();
-        await this.waitForPageLoaded();
-      }
-      var clear_cart_bt_exist = await this.clear_cart_bt.count() > 0;
+    const remove_button = this.page.getByTitle('Remove this item');
+    let remove_button_count = await remove_button.count();
+    for (let i = 0; i < remove_button_count; i++) {
+      await remove_button.nth(0).click(); // Always click the first button
+      await this.waitForPageLoaded();
     }
   }
 
@@ -78,8 +70,8 @@ export class ProductsPage extends BasePage {
         name: `Add “${name}` 
         }).nth(1); 
       await addButton.click();
-      await expect(this.product_added_text).toBeVisible({ timeout: 5000 });
-      await expect(addButton).toBeVisible();
+      await this.product_added_text.waitFor({ state: 'visible', timeout: 5000 });
+      await addButton.waitFor({ state: 'visible', timeout: 5000 })
     }
   }
 
@@ -89,7 +81,7 @@ export class ProductsPage extends BasePage {
     const count = await addButtons.count();
 
     if (count === 0) {
-      throw new Error("❌ No 'Add to cart' buttons found on the page.");
+      throw new Error("No 'Add to cart' buttons found on the page.");
     }
 
     // Determine how many products to add
@@ -114,7 +106,7 @@ export class ProductsPage extends BasePage {
       await addButton.click();
 
       // Wait for product-added confirmation (custom locator from your page object)
-      await expect(this.product_added_text).toBeVisible({ timeout: 5000 });
+      await this.product_added_text.waitFor({ state: 'visible', timeout: 5000 })  ;
 
       addedProducts.push(productName);
     }

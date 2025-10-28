@@ -44,14 +44,14 @@ export class CheckoutPage extends BasePage {
   }
 
   async verifyCheckoutPage() {
-    await expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
+    expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
   }
 
   async verifyProductsInCheckout(productNames: string | string[]) {
     await this.waitForPageLoaded();
     const names = Array.isArray(productNames) ? productNames: [productNames];
     for (const name of names){
-      await expect(this.page.getByRole('cell', { 
+      expect(this.page.getByRole('cell', { 
           name: name
         })).toBeVisible();
     }
@@ -71,6 +71,7 @@ export class CheckoutPage extends BasePage {
 
   async placeOrder() {
     await this.place_order_button.click();
-    await this.waitForPageLoaded();
+    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'visible', timeout: 5000 });
+    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'hidden', timeout: 10000 });
   }
 }
