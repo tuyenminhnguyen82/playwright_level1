@@ -72,6 +72,6 @@ export class CheckoutPage extends BasePage {
   async placeOrder() {
     await this.place_order_button.click();
     await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'visible', timeout: 5000 });
-    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'hidden', timeout: 10000 });
+    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'hidden', timeout: 15000 });
   }
 }

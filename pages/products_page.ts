@@ -10,9 +10,8 @@ export class ProductsPage extends BasePage {
   readonly products_grid: Locator;
   readonly products_list: Locator;
   readonly product_added_text: Locator;
-  readonly first_remove_bt: Locator;
-  readonly only_remove_bt: Locator;
-  readonly clear_cart_bt: Locator;
+  readonly products: Locator;
+  readonly sortComboBox: Locator;
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
@@ -23,10 +22,34 @@ export class ProductsPage extends BasePage {
     this.list_icon = page.locator('.switch-list');
     this.products_grid = page.locator('.products-loop.products-grid');
     this.products_list = page.locator('.products-loop.products-list');
-    this.product_added_text = page.getByText('Product added.');
-    this.only_remove_bt = page.getByRole('link', { name: 'Remove' });    
-    this.first_remove_bt = page.getByRole('link', { name: 'Remove' }).first();    
-    this.clear_cart_bt = page.getByText('Clear shopping cart');
+    this.product_added_text = page.getByText('Product added.');  
+    this.products = page.locator(`.content-product`);
+    this.sortComboBox = page.getByLabel('Shop order');
+  }
+
+  async sortItemsBy(sortBy: "popularity" | "rating" | "date" | "price" | "price-desc") {
+    await this.sortComboBox.click();
+    await this.sortComboBox.selectOption(`${sortBy}`);
+    await this.page.waitForURL(`**=${sortBy}`);
+  }
+
+  async verifyProductsSortedByPrice(order: "Low to High" | "High to Low"){
+    await this.waitForPageLoaded();
+    const priceLocators = this.products.locator(`.price`);
+    const count = await priceLocators.count();
+    console.log(`Number of items: ${count}`);
+    const prices: number[] = [];
+    
+    for (let i = 0; i < count; i++) {
+       const priceText = (await priceLocators.nth(i).locator(`//bdi`).last().textContent())?.trim() || '';
+      console.log(`Price: ${priceText}`);
+      const priceNumber =  parseFloat(priceText.replace(/[^0-9.]/g, ''));
+      prices.push(priceNumber);
+    }
+    console.log("prices: \n", prices);
+    const sortedPrices = [...prices].sort((a, b) => order === 'Low to High' ? a - b : b - a);
+    console.log("sorted: \n", sortedPrices);
+    expect(prices).toEqual(sortedPrices);
   }
 
   async selectElectronicComponents(){
@@ -46,7 +69,7 @@ export class ProductsPage extends BasePage {
 
   async clickListView(){
     await this.list_icon.click();
-    await this.waitForPageLoaded();
+    await this.page.waitForURL('**=list');
   }
   async verifyProductsListVisible(){
     expect(this.products_list).toBeVisible();

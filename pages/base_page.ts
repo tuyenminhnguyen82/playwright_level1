@@ -5,12 +5,14 @@ export class BasePage {
   readonly first_popup_close_button: Locator;
   readonly login_signup_link: Locator;
   readonly cart_icon: Locator;
+  readonly shop_link: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.first_popup_close_button = page.getByRole('button', { name: 'Close' });
     this.login_signup_link = page.getByRole('link', { name: 'Log in / Sign up' });
     this.cart_icon =  page.getByRole('link', { name:  /\$/ });
+    this.shop_link = page.locator('#menu-main-menu-1').getByRole('link', { name: 'Shop' });
   }
 
   async waitForPageLoaded(timeout: number = 10000): Promise<void> {
@@ -23,5 +25,10 @@ export class BasePage {
 
   async gotoLoginPage() {
     await this.login_signup_link.click();
+  }
+
+  async gotoShopPage() {
+    await this.shop_link.click();
+    await this.waitForPageLoaded();
   }
 }
