@@ -3,42 +3,38 @@ import {BillingDetails, PaymentMethod} from '../../models/billing_details';
 import { BasePage } from '../base_page';
 
 export class CheckoutPage extends BasePage {
-  readonly page: Page;
-  readonly checkout_header: Locator;
-  readonly place_order_button: Locator;
-  readonly first_name_txt: Locator;
-  readonly last_name_txt: Locator;
-  readonly street_address_txt: Locator;
-  readonly town_city_txt: Locator;
-  readonly zip_code_txt: Locator;
-  readonly phone_txt: Locator;
-  readonly email_address_txt: Locator;  
-  readonly payment_method_direct_bank: Locator;
-  readonly payment_method_check: Locator;
-  readonly payment_method_cash: Locator;
+  readonly placeOrderButton: Locator;
+  readonly firstNameTxt: Locator;
+  readonly lastNameTxt: Locator;
+  readonly streetAddressTxt: Locator;
+  readonly townCityTxt: Locator;
+  readonly zipCodeTxt: Locator;
+  readonly phoneTxt: Locator;
+  readonly emailAddressTxt: Locator;  
+  readonly paymentMethodDirectBank: Locator;
+  readonly paymentMethodCheck: Locator;
+  readonly paymentMethodCash: Locator;
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
-    this.page = page;
-    this.checkout_header = page.getByText('Shopping cart Checkout Order')
-    this.first_name_txt = page.getByRole('textbox', { name: 'First name *' });
-    this.last_name_txt = page.getByRole('textbox', { name: 'Last name *' });
-    this.street_address_txt = page.getByRole('textbox', { name: 'Street address *' });
-    this.town_city_txt = page.getByRole('textbox', { name: 'Town / City *' });
-    this.zip_code_txt = page.getByRole('textbox', { name: 'ZIP Code *' });
-    this.phone_txt = page.getByRole('textbox', { name: 'Phone *' });
-    this.email_address_txt = page.getByRole('textbox', { name: 'Email address *' });
-    this.place_order_button = page.getByRole('button', { name: 'Place order' });
-    this.payment_method_direct_bank = page.getByRole('radio', { name: 'Direct bank transfer' });
-    this.payment_method_check = page.getByRole('radio', { name: 'Check payments' });
-    this.payment_method_cash = page.getByRole('radio', { name: 'Cash on delivery' });
+    this.firstNameTxt = page.getByRole('textbox', { name: 'First name *' });
+    this.lastNameTxt = page.getByRole('textbox', { name: 'Last name *' });
+    this.streetAddressTxt = page.getByRole('textbox', { name: 'Street address *' });
+    this.townCityTxt = page.getByRole('textbox', { name: 'Town / City *' });
+    this.zipCodeTxt = page.getByRole('textbox', { name: 'ZIP Code *' });
+    this.phoneTxt = page.getByRole('textbox', { name: 'Phone *' });
+    this.emailAddressTxt = page.getByRole('textbox', { name: 'Email address *' });
+    this.placeOrderButton = page.getByRole('button', { name: 'Place order' });
+    this.paymentMethodDirectBank = page.getByRole('radio', { name: 'Direct bank transfer' });
+    this.paymentMethodCheck = page.getByRole('radio', { name: 'Check payments' });
+    this.paymentMethodCash = page.getByRole('radio', { name: 'Cash on delivery' });
   }
 
   private getPaymentMethodLocator(paymentMethod: PaymentMethod): Locator {
     const locatorMap: Record<PaymentMethod, Locator> = {
-      [PaymentMethod.Bank]: this.payment_method_direct_bank,
-      [PaymentMethod.Check]: this.payment_method_check,
-      [PaymentMethod.Cash]: this.payment_method_cash
+      [PaymentMethod.Bank]: this.paymentMethodDirectBank,
+      [PaymentMethod.Check]: this.paymentMethodCheck,
+      [PaymentMethod.Cash]: this.paymentMethodCash
     };
     return locatorMap[paymentMethod];
   }
@@ -58,20 +54,19 @@ export class CheckoutPage extends BasePage {
   }  
 
   async fillBillingDetails(billingDetails: BillingDetails, paymentMethod: PaymentMethod) {
-    await this.first_name_txt.fill(billingDetails.firstName);
-    await this.last_name_txt.fill(billingDetails.lastName);
-    await this.street_address_txt.fill(billingDetails.streetAddress);
-    await this.town_city_txt.fill(billingDetails.city);
-    await this.zip_code_txt.fill(billingDetails.postalCode);
-    await this.phone_txt.fill(billingDetails.phone);
-    await this.email_address_txt.fill(billingDetails.email);
+    await this.firstNameTxt.fill(billingDetails.firstName);
+    await this.lastNameTxt.fill(billingDetails.lastName);
+    await this.streetAddressTxt.fill(billingDetails.streetAddress);
+    await this.townCityTxt.fill(billingDetails.city);
+    await this.zipCodeTxt.fill(billingDetails.postalCode);
+    await this.phoneTxt.fill(billingDetails.phone);
+    await this.emailAddressTxt.fill(billingDetails.email);
     const paymentMethodLocator = this.getPaymentMethodLocator(paymentMethod);
       await paymentMethodLocator.check();
     }
 
   async placeOrder() {
-    await this.place_order_button.click();
-    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'visible', timeout: 5000 });
-    await this.page.locator('.blockUI.blockOverlay').waitFor({ state: 'hidden', timeout: 15000 });
+    await this.placeOrderButton.click();
+    await this.page.waitForURL('**/order-received/**', { timeout: 20000 });
   }
 }

@@ -3,17 +3,15 @@ import { PaymentMethod } from '../../models/billing_details';
 import { BasePage } from '../base_page';
 
 export class OrderPage extends BasePage {
-  readonly page: Page;  
-  readonly order_page_title: Locator;
+  readonly orderPageTitle: Locator;
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
-    this.page = page;
-    this.order_page_title =  page.getByText('Thank you. Your order has');
+    this.orderPageTitle =  page.getByText('Thank you. Your order has');
   }
 
   async verifyOrderPageDisplayed(){
-    expect(this.order_page_title).toBeVisible({timeout: 10000});
+    expect(this.orderPageTitle).toBeVisible({timeout: 10000});
   }
 
   async verifyProductsInOrderPage(productNames: string | string[]) {
