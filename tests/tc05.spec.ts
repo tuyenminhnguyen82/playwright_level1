@@ -41,7 +41,8 @@ test('TC05 - Verify orders appear in order history', async ({ basePage, loginPag
     //place order
     await checkoutPage.placeOrder();
     //verify order page and product in order page
-    let orderId = await orderPage.verifyOrderPageDisplayed();
+    await orderPage.verifyOrderPageDisplayed();
+    let orderId = await orderPage.getOrderId();
     orderIdList.push(orderId);
   }
   //verify orders in my account page

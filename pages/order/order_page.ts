@@ -14,9 +14,6 @@ export class OrderPage extends BasePage {
 
   async verifyOrderPageDisplayed(){
     expect(this.orderPageTitle).toBeVisible({timeout: 10000});
-    const orderIdText = await this.orderIdLocator.innerText();
-    console.log(orderIdText);
-    return orderIdText;
   }
 
   async verifyProductsInOrderPage(productNames: string | string[]) {
@@ -32,4 +29,9 @@ export class OrderPage extends BasePage {
     expect(this.page.getByRole('strong').filter({ hasText: email })).toBeVisible({timeout: 5000});
   }
 
+  async getOrderId(){
+    const orderIdText = await this.orderIdLocator.innerText();
+    console.log(orderIdText);
+    return orderIdText;
+  }  
 }
