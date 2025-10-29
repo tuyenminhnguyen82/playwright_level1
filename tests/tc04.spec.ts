@@ -1,6 +1,6 @@
 import { test } from "../fixture/page_objects";
 import Constant from "../data/constants"; 
-import { BillingDetails, PaymentMethod, SortType } from "../models/billing_details"; 
+import { BillingDetails } from "../models/billing_details"; 
 
 
 test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {

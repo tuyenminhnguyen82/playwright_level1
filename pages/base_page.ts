@@ -31,4 +31,9 @@ export class BasePage {
     await this.shopLink.click();
     await this.waitForPageLoaded();
   }
+
+  async goToMyAccountPage() {
+    await this.page.goto('https://demo.testarchitect.com/my-account/', { waitUntil: 'domcontentloaded' });
+    await this.page.waitForURL('**/my-account/**', { timeout: 10000 });
+  }
 }

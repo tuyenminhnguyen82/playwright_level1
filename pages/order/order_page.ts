@@ -4,14 +4,19 @@ import { BasePage } from '../base_page';
 
 export class OrderPage extends BasePage {
   readonly orderPageTitle: Locator;
+  readonly orderIdLocator: Locator;
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
-    this.orderPageTitle =  page.getByText('Thank you. Your order has');
+    this.orderPageTitle = page.getByText('Thank you. Your order has');
+    this.orderIdLocator = page.locator('.woocommerce-order-overview__order.order strong');
   }
 
   async verifyOrderPageDisplayed(){
     expect(this.orderPageTitle).toBeVisible({timeout: 10000});
+    const orderIdText = await this.orderIdLocator.innerText();
+    console.log(orderIdText);
+    return orderIdText;
   }
 
   async verifyProductsInOrderPage(productNames: string | string[]) {
@@ -26,4 +31,5 @@ export class OrderPage extends BasePage {
     expect(this.page.getByRole('strong').filter({ hasText: paymentMethod })).toBeVisible({timeout: 5000});
     expect(this.page.getByRole('strong').filter({ hasText: email })).toBeVisible({timeout: 5000});
   }
+
 }
