@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { BasePage } from './base_page';
+import { SortOption } from '../models/billing_details';
 
 export class ProductsPage extends BasePage {
   readonly allDepartmentMenu: Locator;
@@ -25,7 +26,7 @@ export class ProductsPage extends BasePage {
     this.sortComboBox = page.getByLabel('Shop order');
   }
 
-  async sortItemsBy(sortBy: "popularity" | "rating" | "date" | "price" | "price-desc") {
+  async sortItemsBy(sortBy: SortOption) {
     await this.sortComboBox.click();
     await this.sortComboBox.selectOption(`${sortBy}`);
     await this.page.waitForURL(`**=${sortBy}`);

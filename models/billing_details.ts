@@ -15,3 +15,12 @@ export enum PaymentMethod {
   Bank = 'Direct bank transfer',
   Cash = 'Cash on delivery',
 }
+
+export enum SortOption {
+  default = 'menu_order',
+  popularity = 'popularity',
+  rating = 'rating',
+  date = 'date',
+  price = 'price',
+  price_desc = 'price-desc',
+}

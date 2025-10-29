@@ -1,6 +1,6 @@
 import { test } from "../fixture/page_objects";
 import Constant from "../data/constants"; 
-import { BillingDetails } from "../models/billing_details"; 
+import { BillingDetails, SortOption } from "../models/billing_details"; 
 
 
 test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
@@ -22,8 +22,8 @@ test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage
   //navigate to products page and perform actions
   await basePage.gotoShopPage();
   await productsPage.clickListView();
-  await productsPage.sortItemsBy("price");
+  await productsPage.sortItemsBy(SortOption.price);
   await productsPage.verifyProductsSortedByPrice('Low to High');
-  await productsPage.sortItemsBy("price-desc");
+  await productsPage.sortItemsBy(SortOption.price_desc);
   await productsPage.verifyProductsSortedByPrice('High to Low');
 });
