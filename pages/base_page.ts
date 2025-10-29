@@ -2,15 +2,17 @@ import { type Locator, type Page } from '@playwright/test';
 
 export class BasePage {
   readonly page: Page;
-  readonly first_popup_close_button: Locator;
-  readonly login_signup_link: Locator;
-  readonly cart_icon: Locator;
+  readonly firstPopupCloseButton: Locator;
+  readonly loginSignupLink: Locator;
+  readonly cartIcon: Locator;
+  readonly shopLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.first_popup_close_button = page.getByRole('button', { name: 'Close' });
-    this.login_signup_link = page.getByRole('link', { name: 'Log in / Sign up' });
-    this.cart_icon =  page.getByRole('link', { name:  /\$/ });
+    this.firstPopupCloseButton = page.getByRole('button', { name: 'Close' });
+    this.loginSignupLink = page.getByRole('link', { name: 'Log in / Sign up' });
+    this.cartIcon =  page.getByRole('link', { name:  /\$/ });
+    this.shopLink = page.locator('#menu-main-menu-1').getByRole('link', { name: 'Shop' });
   }
 
   async waitForPageLoaded(timeout: number = 10000): Promise<void> {
@@ -18,10 +20,20 @@ export class BasePage {
   }
   async navigate() {
     await this.page.goto('/', { waitUntil: 'domcontentloaded' });
-    await this.first_popup_close_button.click();
+    await this.firstPopupCloseButton.click();
   }
 
   async gotoLoginPage() {
-    await this.login_signup_link.click();
+    await this.loginSignupLink.click();
+  }
+
+  async gotoShopPage() {
+    await this.shopLink.click();
+    await this.waitForPageLoaded();
+  }
+
+  async goToMyAccountPage() {
+    await this.page.goto('https://demo.testarchitect.com/my-account/', { waitUntil: 'domcontentloaded' });
+    await this.page.waitForURL('**/my-account/**', { timeout: 10000 });
   }
 }
