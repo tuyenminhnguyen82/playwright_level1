@@ -3,7 +3,7 @@ import Constant from "../data/constants";
 import { BillingDetails, PaymentMethod } from "../models/billing_details"; 
 
 
-test('TC01 - Verify users can buy an item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage, myAccountPage }) => {
+test('TC05 - Verify orders appear in order history', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage, myAccountPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
   const billingDetails = new BillingDetails(
       'Tuyen',
