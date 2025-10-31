@@ -12,6 +12,7 @@ export class ProductsPage extends BasePage {
   readonly productAddedText: Locator;
   readonly products: Locator;
   readonly sortComboBox: Locator;
+  readonly productContentImage: Locator;
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
@@ -24,6 +25,7 @@ export class ProductsPage extends BasePage {
     this.productAddedText = page.getByText('Product added.');  
     this.products = page.locator(`.content-product`);
     this.sortComboBox = page.getByLabel('Shop order');
+    this.productContentImage = page.locator('.product-content-image');    
   }
 
   async sortItemsBy(sortBy: SortOption) {
@@ -136,4 +138,27 @@ export class ProductsPage extends BasePage {
 
     return addedProducts;
   }  
+
+  async clickRandomProductImage(): Promise< string > {
+    // Find all products
+    const count = await this.productContentImage.count();
+
+    if (count === 0) {
+      throw new Error("No product found on the page.");
+    }
+
+    // Pick unique random index
+    const selectedIndex = (Math.floor(Math.random() * count));
+
+    // Identify the random product image
+    const productImage = this.productContentImage.nth(selectedIndex);
+    // From that image, locate the closest parent .content-product
+    const productContainer = productImage.locator('xpath=ancestor::div[contains(@class, "content-product")]');
+
+    // Get the title text within that container
+    const productName = await productContainer.locator('.product-title a').innerText();
+    console.log(`Product title for image ${selectedIndex}: ${productName}`);
+    productImage.click();
+    return productName;
+  }    
 }

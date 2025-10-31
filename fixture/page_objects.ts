@@ -6,6 +6,7 @@ import { ShoppingCartPage } from '../pages/order/shopping_cart_page';
 import { CheckoutPage } from '../pages/order/checkout_page';
 import { OrderPage } from "../pages/order/order_page";    
 import { MyAccountPage } from "../pages/my_accout_page";
+import { ProductDetailsPage } from "../pages/product_details_page";
 
 export type PageObjects = {
     loginPage: LoginPage;
@@ -15,6 +16,7 @@ export type PageObjects = {
     checkoutPage: CheckoutPage;
     orderPage: OrderPage;
     myAccountPage: MyAccountPage;
+    productDetailsPage: ProductDetailsPage;
 };
 
 export const test = base.extend<PageObjects>({
@@ -38,5 +40,8 @@ export const test = base.extend<PageObjects>({
     },
     myAccountPage: async ({ page }, use) => {
         await use(new MyAccountPage(page));
-    }
+    },
+    productDetailsPage: async ({ page }, use) => {
+        await use(new ProductDetailsPage(page));
+    },
 });

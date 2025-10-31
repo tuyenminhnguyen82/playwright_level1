@@ -1,9 +1,8 @@
 import { test } from "../fixture/page_objects";
 import Constant from "../data/constants"; 
-import { BillingDetails, SortOption } from "../models/billing_details"; 
+import { BillingDetails } from "../models/billing_details"; 
 
-
-test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage, productsPage }) => {
+test('TC10 - Verify users can post a review', async ({ basePage, loginPage, productsPage, productDetailsPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
   const billingDetails = new BillingDetails(
       'Tuyen',
@@ -21,9 +20,11 @@ test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage
   await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
   //navigate to products page and perform actions
   await basePage.gotoShopPage();
-  await productsPage.clickListView();
-  await productsPage.sortItemsBy(SortOption.price);
-  await productsPage.verifyProductsSortedByPrice('Low to High');
-  await productsPage.sortItemsBy(SortOption.price_desc);
-  await productsPage.verifyProductsSortedByPrice('High to Low');
+  await productsPage.clickRandomProductImage();
+  await productDetailsPage.clickReviewTab();
+  const numOfReviews = await productDetailsPage.getCurrentNumOfReviews();
+  const myReview = await productDetailsPage.addReviewInfoForLoginedUser(3, "My comments ");
+  await productDetailsPage.clickReviewTab();
+  await productDetailsPage.verifyReviewData(3, myReview);
+  await productDetailsPage.verifynumberOfReviews(Number(numOfReviews) + 1);
 });

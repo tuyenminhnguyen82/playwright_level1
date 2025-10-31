@@ -68,7 +68,7 @@ export class ShoppingCartPage extends BasePage {
     await this.waitForPageLoaded();
   }
 
-  async verifyQuantityAndTotalPrice(quantity: Number, price: string){
+  async verifyQuantityAndTotalPrice(quantity: number, price: string){
     const quantityLocator = this.page.locator('div.quantity input.input-text');
     const quantityValue = await quantityLocator.inputValue();
     console.log(quantityValue); // "1"
@@ -79,7 +79,7 @@ export class ShoppingCartPage extends BasePage {
     const subtotalValue = parseFloat(subtotalText.replace(/[^0-9.]/g, ''));
     console.log(subtotalValue); // "290.00"
     const priceValue = parseFloat(price.replace(/[^0-9.]/g, ''));
-    const expectedTotalPrice = priceValue * Number(quantity);
+    const expectedTotalPrice = priceValue * quantity;
     await 
     expect(Number(subtotalValue)).toBe(expectedTotalPrice);
   }
