@@ -18,6 +18,27 @@ export class BasePage {
   async waitForPageLoaded(timeout: number = 10000): Promise<void> {
     await this.page.waitForLoadState('networkidle', { timeout });
   }
+
+  async waitForLoadingIconAappear(to: number = 10000): Promise<void> {
+    await this.page.waitForSelector('.blockUI.blockOverlay', { state: 'visible', timeout: to });
+  }
+
+  async waitForLoadingIconDisappear(to: number = 10000): Promise<void> {
+    const overlays = this.page.locator('.blockUI.blockOverlay');
+    const count = await overlays.count();
+
+    // If no overlays, return immediately
+    if (count === 0) return;
+
+    // Wait for each overlay to disappear (either hidden or detached)
+    for (let i = 0; i < count; i++) {
+      await overlays.nth(i).waitFor({
+        state: 'hidden', // safer than 'detached'
+        timeout: to
+      });
+    }
+  }
+
   async navigate() {
     await this.page.goto('/', { waitUntil: 'domcontentloaded' });
     await this.firstPopupCloseButton.click();

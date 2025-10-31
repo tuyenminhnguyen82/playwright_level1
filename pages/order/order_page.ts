@@ -13,6 +13,7 @@ export class OrderPage extends BasePage {
   }
 
   async verifyOrderPageDisplayed(){
+    await this.page.waitForURL('**/order-received/**', { timeout: 20000 });
     expect(this.orderPageTitle).toBeVisible({timeout: 10000});
   }
 

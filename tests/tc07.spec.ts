@@ -1,31 +1,16 @@
 import { test } from "../fixture/page_objects";
-import Constant from "../data/constants"; 
-import { BillingDetails, PaymentMethod } from "../models/billing_details"; 
+import { BillingDetails, PaymentMethod, ErrorRequiredField } from "../models/billing_details"; 
 
 
-test('TC01 - Verify users can buy an item successfully', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
+test('TC07 - Ensure proper error handling when mandatory fields are blank', async ({ basePage, productsPage, shoppingCartPage, checkoutPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
-  const billingDetails = new BillingDetails(
-      'Tuyen',
-      'Nguyen',
-      'Tran Quoc Toan',
-      'Da Nang',
-      '11111',
-      '0123456789',
-      'tuyen.minh.nguyen@agest.vn'
-  );
+  const billingDetails = new BillingDetails('', '', '', '', '', '', '');
   const paymentMethod = PaymentMethod.Check;
   //navigate to the application
   await basePage.navigate();
-  //login to the application
-  await basePage.gotoLoginPage();
-  await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
-  await shoppingCartPage.clearCart();
   //navigate to products page and perform actions
   await productsPage.selectElectronicComponents();
-  //verify grid and list view
-  await productsPage.clickGridView();
-  await productsPage.verifyProductsGridVisible();
+  //verify list view
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
   //add first product to cart and verify in shopping cart page
@@ -42,8 +27,11 @@ test('TC01 - Verify users can buy an item successfully', async ({ basePage, logi
   await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
   //place order
   await checkoutPage.placeOrder();
-  //verify order page and product in order page
-  await orderPage.verifyOrderPageDisplayed();
-  await orderPage.verifyProductsInOrderPage(productNames);
-  await orderPage.verifyPaymentMethodAndEmailInOrderPage(paymentMethod, billingDetails.email);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.firstName);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.lastName);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.streetAddress);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.city);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.postalCode);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.phone);
+  await checkoutPage.verifyErrorRequiredFieldDisplayed(ErrorRequiredField.email);
 });

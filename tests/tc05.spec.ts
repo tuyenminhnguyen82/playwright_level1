@@ -21,21 +21,22 @@ test('TC05 - Verify orders appear in order history', async ({ basePage, loginPag
   //login to the application
   await basePage.gotoLoginPage();
   await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
-  await productsPage.clearCart();
+  await shoppingCartPage.clearCart();
   for (let i = 0; i < 2; i++) {
     //navigate to products page and perform actions
     await productsPage.selectElectronicComponents();
     await productsPage.clickListView();
     await productsPage.verifyProductsListVisible();
     //add first product to cart and verify in shopping cart page
-    const productName = await productsPage.addRandomProducts(1);
-    await productsPage.clickCart();
-    await shoppingCartPage.verifyProductsAdded(productName);
+    const productList = await productsPage.addRandomProducts(1);
+    const productNames = productList.map(p => p.name);
+    await shoppingCartPage.clickCart();
+    await shoppingCartPage.verifyProductsAdded(productNames);
     //proceed to checkout
     await shoppingCartPage.proceedToCheckout();
     //verify checkout page and product in checkout page
     await checkoutPage.verifyCheckoutPage();
-    await checkoutPage.verifyProductsInCheckout(productName);
+    await checkoutPage.verifyProductsInCheckout(productNames);
     //fill billing details
     await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
     //place order
