@@ -28,5 +28,5 @@ test('TC10 - Verify users can post a review', async ({ basePage, loginPage, prod
   await productDetailsPage.addReviewInfoForLoginedUser(3, myReview);
   await productDetailsPage.clickReviewTab();
   await productDetailsPage.verifyReviewData(3, myReview);
-  await productDetailsPage.verifynumberOfReviews(Number(numOfReviews) + 1);
+  await productDetailsPage.verifyNumberOfReviews(Number(numOfReviews) + 1);
 });

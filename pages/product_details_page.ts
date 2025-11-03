@@ -75,7 +75,7 @@ export class ProductDetailsPage extends BasePage {
     await expect(starLocator).toHaveText(numOfStars.toString());  
   }
 
-  async verifynumberOfReviews(n: number) {
+  async verifyNumberOfReviews(n: number) {
     // const tabText = await this.reviewTab.locator('span').innerText(); // e.g., "Reviews (1)"
     // // Extract the number using regex
     // const match = tabText.match(/\d+/);
