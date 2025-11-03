@@ -68,24 +68,26 @@ export class ShoppingCartPage extends BasePage {
     await this.waitForPageLoaded();
   }
 
-  async verifyQuantityAndTotalPrice(quantity: number, price: string){
+  async verifyQuantityAndTotalPrice(quantity: number, price: string) {
+    // Verify quantity
     const quantityLocator = this.page.locator('div.quantity input.input-text');
-    const quantityValue = await quantityLocator.inputValue();
-    console.log(quantityValue); // "1"
-    expect(Number(quantityValue)).toBe(quantity);
-    
+    await expect.soft(quantityLocator).toHaveValue(quantity.toString());
+
+    // Verify subtotal price
     const subtotalLocator = this.page.locator('td.product-subtotal');
-    const subtotalText = (await subtotalLocator.textContent())?.trim() || '0';
-    const subtotalValue = parseFloat(subtotalText.replace(/[^0-9.]/g, ''));
-    console.log(subtotalValue); // "290.00"
+
+    // Calculate expected total
     const priceValue = parseFloat(price.replace(/[^0-9.]/g, ''));
     const expectedTotalPrice = priceValue * quantity;
-    await 
-    expect(Number(subtotalValue)).toBe(expectedTotalPrice);
+
+    // Build regex to match the subtotal text (with optional $ sign)
+    const regex = new RegExp(`\\$?${expectedTotalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`);
+
+    // Assert subtotal matches expected price
+    await expect.soft(subtotalLocator).toHaveText(regex, { timeout: 15000 });
   }
 
   async enterNumberOfProducts(quantity: Number) {
-    await this.quantityTxt.waitFor({state: 'visible', timeout: 5000});
     await this.quantityTxt.fill(quantity.toString());
     await this.page.keyboard.press('Enter');
     await this.waitForLoadingIconAappear();

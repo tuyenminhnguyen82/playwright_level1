@@ -16,7 +16,7 @@ export class ProductDetailsPage extends BasePage {
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
-    this.reviewTab = page.locator('#tab_reviews');
+    this.reviewTab = page.getByRole('link', { name: /Reviews \(\d+\)/ });
     this.oneStar = page.locator('.stars .star-1');
     this.twoStar = page.locator('.stars .star-2');
     this.threeStar = page.locator('.stars .star-3');
@@ -69,28 +69,22 @@ export class ProductDetailsPage extends BasePage {
 
   async verifyReviewData(numOfStars: number, comment: string) {
     const lastReview = this.page.locator('ol.commentlist > li').last();
-
-    // Get the review content text
-    const reviewContent = await lastReview.locator('.description p').innerText();
-
-    // Get the number of stars 
-    const starText = await lastReview.locator('.star-rating .rating').innerText();
-    const numberOfStars = parseInt(starText, 10);
-
-    console.log('Last review content:', reviewContent);
-    console.log('Number of stars:', numberOfStars);
-
-    expect(numberOfStars).toBe(numOfStars);
-    expect(reviewContent).toBe(comment);
+    const reviewContentLocator = lastReview.locator('.description p');
+    const starLocator = lastReview.locator('.star-rating .rating');
+    await expect(reviewContentLocator).toHaveText(comment);
+    await expect(starLocator).toHaveText(numOfStars.toString());  
   }
 
   async verifynumberOfReviews(n: number) {
-    const tabText = await this.reviewTab.locator('span').innerText(); // e.g., "Reviews (1)"
-    // Extract the number using regex
-    const match = tabText.match(/\d+/);
-    const numberOfReviews = match ? parseInt(match[0], 10) : 0;
-    console.log('Number of reviews:', numberOfReviews);
-    expect(numberOfReviews).toBe(n);
+    // const tabText = await this.reviewTab.locator('span').innerText(); // e.g., "Reviews (1)"
+    // // Extract the number using regex
+    // const match = tabText.match(/\d+/);
+    // const numberOfReviews = match ? parseInt(match[0], 10) : 0;
+    // console.log('Number of reviews:', numberOfReviews);
+    // expect(numberOfReviews).toBe(n);
+    const expectedReviews = n;
+    const regex = new RegExp(`Reviews \\(${expectedReviews}\\)`);
+    await expect(this.reviewTab).toHaveText(regex, { timeout: 5000 });
   }
 
   async getCurrentNumOfReviews(): Promise <Number> {
