@@ -13,6 +13,8 @@ test('TC10 - Verify users can post a review', async ({ basePage, loginPage, prod
       '0123456789',
       'tuyen.minh.nguyen@agest.vn'
   );
+  let now = new Date();
+  let myReview = "My comments on datetime " + now.toISOString();
   //navigate to the application
   await basePage.navigate();
   //login to the application
@@ -23,7 +25,7 @@ test('TC10 - Verify users can post a review', async ({ basePage, loginPage, prod
   await productsPage.clickRandomProductImage();
   await productDetailsPage.clickReviewTab();
   const numOfReviews = await productDetailsPage.getCurrentNumOfReviews();
-  const myReview = await productDetailsPage.addReviewInfoForLoginedUser(3, "My comments ");
+  await productDetailsPage.addReviewInfoForLoginedUser(3, myReview);
   await productDetailsPage.clickReviewTab();
   await productDetailsPage.verifyReviewData(3, myReview);
   await productDetailsPage.verifynumberOfReviews(Number(numOfReviews) + 1);

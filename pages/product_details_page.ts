@@ -49,15 +49,12 @@ export class ProductDetailsPage extends BasePage {
 
     return locator;
   }
-  async addReviewInfoForLoginedUser(numOfStarts: number, comment: string): Promise <string> {
+  async addReviewInfoForLoginedUser(numOfStarts: number, comment: string) {
     const selectedNumOfStars = await this.getNumberOfStarsLocator(numOfStarts);
     await selectedNumOfStars.click();
-    let now = new Date();
-    let review = comment + now.toISOString();
-    await this.reviewTxt.fill(review);
+    await this.reviewTxt.fill(comment);
     await this.submitButton.click();
     await this.waitForPageLoaded();
-    return review;
   }
 
   async addReviewInfoForAgestUser(numOfStarts: number, comment: string, name: string, email: string) {
