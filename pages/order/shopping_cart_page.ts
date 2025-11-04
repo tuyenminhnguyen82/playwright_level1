@@ -1,6 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { BasePage } from '../base_page';
-import { stringify } from 'querystring';
 
 export class ShoppingCartPage extends BasePage {
   readonly proceedToCheckoutLink: Locator;

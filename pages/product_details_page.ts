@@ -1,6 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { BasePage } from './base_page';
-import { assert } from 'console';
 
 export class ProductDetailsPage extends BasePage {
   readonly reviewTab: Locator;
@@ -76,8 +75,7 @@ export class ProductDetailsPage extends BasePage {
   }
 
   async verifyNumberOfReviews(n: number) {
-    const expectedReviews = n;
-    const regex = new RegExp(`Reviews \\(${expectedReviews}\\)`);
+    const regex = new RegExp(`Reviews \\(${n}\\)`);
     await expect(this.reviewTab).toHaveText(regex, { timeout: 5000 });
   }
 
