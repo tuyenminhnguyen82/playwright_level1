@@ -18,7 +18,7 @@ export class MyAccountPage extends BasePage {
     const orderIds = Array.isArray(orderId) ? orderId : [orderId];
     console.log("Order IDs to verify: ", orderIds);
     for (const id of orderIds) {
-      expect(this.page.getByRole('link', { name: `#${id}` })).toBeVisible({ timeout: 10000 });
+     await expect(this.page.getByRole('link', { name: `#${id}` })).toBeVisible({ timeout: 10000 });
     }
   }
 }

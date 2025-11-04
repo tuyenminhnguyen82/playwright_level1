@@ -65,7 +65,7 @@ export class ProductsPage extends BasePage {
   }
 
   async verifyProductsGridVisible(){
-    expect(this.productsGrid).toBeVisible();
+    await expect(this.productsGrid).toBeVisible();
   }
 
   async clickListView(){
@@ -73,7 +73,7 @@ export class ProductsPage extends BasePage {
     await this.page.waitForURL('**=list');
   }
   async verifyProductsListVisible(){
-    expect(this.productsList).toBeVisible();
+    await expect(this.productsList).toBeVisible();
   }
 
   async addProducts(productNames: string | string[]): Promise<void> {

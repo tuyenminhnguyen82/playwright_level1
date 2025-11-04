@@ -29,7 +29,7 @@ export class ShoppingCartPage extends BasePage {
         await this.waitForPageLoaded();
         await this.page.getByRole('link', { name: name }).waitFor({ state: 'visible', timeout: 10000 });
       }
-      expect(
+      await expect(
       this.page.getByRole('link', { name: name })
       ).toBeVisible({ timeout: 10000 });
     }
@@ -59,7 +59,7 @@ export class ShoppingCartPage extends BasePage {
   }  
 
   async verifyCartIsEmpty() {
-    expect(this.cartEmptyMessage).toBeVisible({ timeout: 10000 });
+    await expect(this.cartEmptyMessage).toBeVisible({ timeout: 10000 });
   }   
 
   async clickClearCartButton() {

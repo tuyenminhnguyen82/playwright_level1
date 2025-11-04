@@ -33,7 +33,7 @@ export class CheckoutPage extends BasePage {
   async verifyErrorRequiredFieldDisplayed(field: ErrorRequiredField) {
     await this.waitForLoadingIconDisappear();
     const fieldLocator = this.page.getByText(field);
-    expect(fieldLocator).toBeVisible({ timeout: 10000 });
+    await expect(fieldLocator).toBeVisible({ timeout: 10000 });
   }
   private getPaymentMethodLocator(paymentMethod: PaymentMethod): Locator {
     const locatorMap: Record<PaymentMethod, Locator> = {
@@ -45,14 +45,14 @@ export class CheckoutPage extends BasePage {
   }
 
   async verifyCheckoutPage() {
-    expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
+    await expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
   }
 
   async verifyProductsInCheckout(productNames: string | string[]) {
     await this.waitForPageLoaded();
     const names = Array.isArray(productNames) ? productNames: [productNames];
     for (const name of names){
-      expect(this.page.getByRole('cell', { 
+      await expect(this.page.getByRole('cell', { 
           name: name
         })).toBeVisible();
     }
