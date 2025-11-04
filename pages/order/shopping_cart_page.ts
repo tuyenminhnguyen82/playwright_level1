@@ -44,12 +44,12 @@ export class ShoppingCartPage extends BasePage {
   async clickCart(){
     await this.waitForPageLoaded();
     await this.cartIcon.click();
-     await this.page.waitForURL("**/cart/", { timeout: 10000 });
+    await this.waitForPageLoaded();
+    await this.page.waitForURL("**/cart/", { timeout: 10000 });
   }
 
   async clearCart(){
-    await this.cartIcon.click();
-    await this.waitForPageLoaded();
+    await this.clickCart();
     const remove_button = this.page.getByTitle('Remove this item');
     let remove_button_count = await remove_button.count();
     for (let i = 0; i < remove_button_count; i++) {
