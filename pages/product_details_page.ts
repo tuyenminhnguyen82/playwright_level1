@@ -76,12 +76,6 @@ export class ProductDetailsPage extends BasePage {
   }
 
   async verifyNumberOfReviews(n: number) {
-    // const tabText = await this.reviewTab.locator('span').innerText(); // e.g., "Reviews (1)"
-    // // Extract the number using regex
-    // const match = tabText.match(/\d+/);
-    // const numberOfReviews = match ? parseInt(match[0], 10) : 0;
-    // console.log('Number of reviews:', numberOfReviews);
-    // expect(numberOfReviews).toBe(n);
     const expectedReviews = n;
     const regex = new RegExp(`Reviews \\(${expectedReviews}\\)`);
     await expect(this.reviewTab).toHaveText(regex, { timeout: 5000 });
