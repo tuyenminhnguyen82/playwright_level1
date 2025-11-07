@@ -24,3 +24,13 @@ export enum SortOption {
   price = 'price',
   price_desc = 'price-desc',
 }
+
+export enum ErrorRequiredField {
+  firstName = 'Billing First name is a required field.',
+  lastName = 'Billing Last name is a required field.',
+  streetAddress = 'Billing Street address is a required field.',
+  city = 'Billing Town / City is a required field.',
+  postalCode = 'Billing ZIP Code is a required field.',
+  phone = 'Billing Phone is a required field.',
+  email = 'Billing Email address is a required field.',
+}

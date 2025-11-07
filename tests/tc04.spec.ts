@@ -3,7 +3,7 @@ import Constant from "../data/constants";
 import { BillingDetails, SortOption } from "../models/billing_details"; 
 
 
-test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage, productsPage, shoppingCartPage, checkoutPage, orderPage }) => {
+test('TC04 - Verify users can sort items by price', async ({ basePage, loginPage, productsPage }) => {
   test.setTimeout(5 * 60 * 1000); //set timeout to 5 minutes
   const billingDetails = new BillingDetails(
       'Tuyen',

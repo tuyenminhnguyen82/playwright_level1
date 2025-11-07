@@ -13,20 +13,21 @@ export class OrderPage extends BasePage {
   }
 
   async verifyOrderPageDisplayed(){
-    expect(this.orderPageTitle).toBeVisible({timeout: 10000});
+    await this.page.waitForURL('**/order-received/**', { timeout: 20000 });
+    await expect(this.orderPageTitle).toBeVisible({timeout: 10000});
   }
 
   async verifyProductsInOrderPage(productNames: string | string[]) {
     await this.waitForPageLoaded();
     const names = Array.isArray(productNames) ? productNames: [productNames];
     for (const name of names){
-      expect(this.page.getByRole('link', { name: name })).toBeVisible({ timeout: 10000 });
+      await expect(this.page.getByRole('link', { name: name })).toBeVisible({ timeout: 10000 });
     }
   }
 
   async verifyPaymentMethodAndEmailInOrderPage(paymentMethod: PaymentMethod, email: string){  
-    expect(this.page.getByRole('strong').filter({ hasText: paymentMethod })).toBeVisible({timeout: 5000});
-    expect(this.page.getByRole('strong').filter({ hasText: email })).toBeVisible({timeout: 5000});
+    await expect(this.page.getByRole('strong').filter({ hasText: paymentMethod })).toBeVisible({timeout: 5000});
+    await expect(this.page.getByRole('strong').filter({ hasText: email })).toBeVisible({timeout: 5000});
   }
 
   async getOrderId(){

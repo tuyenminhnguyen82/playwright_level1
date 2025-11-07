@@ -20,24 +20,25 @@ test('TC02 - Verify users can buy multiple item successfully', async ({ basePage
   //login to the application
   await basePage.gotoLoginPage();
   await loginPage.login(Constant.USERNAME, Constant.PASSWORD);
-  await productsPage.clearCart();
+  await shoppingCartPage.clearCart();
   //navigate to products page and perform actions
   await productsPage.selectElectronicComponents();
   await productsPage.clickListView();
   await productsPage.verifyProductsListVisible();
-  const productList = await productsPage.addRandomProducts(3);  
-  await productsPage.clickCart();
-  await shoppingCartPage.verifyProductsAdded(productList);
+  const productList = await productsPage.addRandomProducts(3);
+  const productNames = productList.map(p => p.name);
+  await shoppingCartPage.clickCart();
+  await shoppingCartPage.verifyProductsAdded(productNames);
   //proceed to checkout
   await shoppingCartPage.proceedToCheckout();
   //verify checkout page and product in checkout page
   await checkoutPage.verifyCheckoutPage();
-  await checkoutPage.verifyProductsInCheckout(productList);
+  await checkoutPage.verifyProductsInCheckout(productNames);
   //fill billing details
   await checkoutPage.fillBillingDetails(billingDetails, paymentMethod);
   //place order
   await checkoutPage.placeOrder();
   //verify order page and product in order page
   await orderPage.verifyOrderPageDisplayed();
-  await orderPage.verifyProductsInOrderPage(productList);
+  await orderPage.verifyProductsInOrderPage(productNames);
 });

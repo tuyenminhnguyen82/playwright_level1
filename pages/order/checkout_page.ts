@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import {BillingDetails, PaymentMethod} from '../../models/billing_details';
+import {BillingDetails, ErrorRequiredField, PaymentMethod} from '../../models/billing_details';
 import { BasePage } from '../base_page';
 
 export class CheckoutPage extends BasePage {
@@ -30,6 +30,11 @@ export class CheckoutPage extends BasePage {
     this.paymentMethodCash = page.getByRole('radio', { name: 'Cash on delivery' });
   }
 
+  async verifyErrorRequiredFieldDisplayed(field: ErrorRequiredField) {
+    await this.waitForLoadingIconDisappear();
+    const fieldLocator = this.page.getByText(field);
+    await expect(fieldLocator).toBeVisible({ timeout: 10000 });
+  }
   private getPaymentMethodLocator(paymentMethod: PaymentMethod): Locator {
     const locatorMap: Record<PaymentMethod, Locator> = {
       [PaymentMethod.Bank]: this.paymentMethodDirectBank,
@@ -40,14 +45,14 @@ export class CheckoutPage extends BasePage {
   }
 
   async verifyCheckoutPage() {
-    expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
+    await expect(this.page).toHaveURL('https://demo.testarchitect.com/checkout/');
   }
 
   async verifyProductsInCheckout(productNames: string | string[]) {
     await this.waitForPageLoaded();
     const names = Array.isArray(productNames) ? productNames: [productNames];
     for (const name of names){
-      expect(this.page.getByRole('cell', { 
+      await expect(this.page.getByRole('cell', { 
           name: name
         })).toBeVisible();
     }
@@ -67,6 +72,5 @@ export class CheckoutPage extends BasePage {
 
   async placeOrder() {
     await this.placeOrderButton.click();
-    await this.page.waitForURL('**/order-received/**', { timeout: 20000 });
   }
 }

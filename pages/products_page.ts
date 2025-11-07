@@ -12,11 +12,12 @@ export class ProductsPage extends BasePage {
   readonly productAddedText: Locator;
   readonly products: Locator;
   readonly sortComboBox: Locator;
+  readonly productContentImage: Locator;
 
   constructor(page: Page) {
     super(page); // Call the constructor of BasePage
     this.allDepartmentMenu = page.getByText('All departments');
-    this.electronicComponentsLink = page.getByRole('link', { name: ' Electronic Components &' });
+    this.electronicComponentsLink = page.getByRole('link', { name: 'Electronic Components & Supplies' });
     this.gridIcon = page.locator('.switch-grid');
     this.listIcon = page.locator('.switch-list');
     this.productsGrid = page.locator('.products-loop.products-grid');
@@ -24,6 +25,7 @@ export class ProductsPage extends BasePage {
     this.productAddedText = page.getByText('Product added.');  
     this.products = page.locator(`.content-product`);
     this.sortComboBox = page.getByLabel('Shop order');
+    this.productContentImage = page.locator('.product-content-image');    
   }
 
   async sortItemsBy(sortBy: SortOption) {
@@ -63,7 +65,7 @@ export class ProductsPage extends BasePage {
   }
 
   async verifyProductsGridVisible(){
-    expect(this.productsGrid).toBeVisible();
+    await expect(this.productsGrid).toBeVisible();
   }
 
   async clickListView(){
@@ -71,18 +73,7 @@ export class ProductsPage extends BasePage {
     await this.page.waitForURL('**=list');
   }
   async verifyProductsListVisible(){
-    expect(this.productsList).toBeVisible();
-  }
-
-  async clearCart(){
-    await this.cartIcon.click();
-    await this.waitForPageLoaded();
-    const remove_button = this.page.getByTitle('Remove this item');
-    let remove_button_count = await remove_button.count();
-    for (let i = 0; i < remove_button_count; i++) {
-      await remove_button.nth(0).click(); // Always click the first button
-      await this.waitForPageLoaded();
-    }
+    await expect(this.productsList).toBeVisible();
   }
 
   async addProducts(productNames: string | string[]): Promise<void> {
@@ -97,7 +88,7 @@ export class ProductsPage extends BasePage {
     }
   }
 
-  async addRandomProducts(numberOfProducts: number): Promise<string[]> {
+  async addRandomProducts(numberOfProducts: number): Promise<{ name: string; price: string }[]> {
     // Find all visible "Add to cart" buttons
     const addButtons = this.page.locator('a.add_to_cart_button');
     const count = await addButtons.count();
@@ -115,30 +106,59 @@ export class ProductsPage extends BasePage {
       selectedIndexes.add(Math.floor(Math.random() * count));
     }
 
-    const addedProducts: string[] = [];
+    // Store product info here
+    const addedProducts: { name: string; price: string }[] = [];
 
     for (const index of selectedIndexes) {
       const addButton = addButtons.nth(index);
 
-      // Extract product name from the 'data-product_name' attribute
-      const productName = (await addButton.getAttribute('data-product_name'))?.trim() || `Product ${index + 1}`;
+      // Get product name
+      const productName =
+        (await addButton.getAttribute('data-product_name'))?.trim() || `Product ${index + 1}`;
 
-      // Scroll to the element and click it
+      // Get the price belonging to this button
+      // Using CSS :has() to find the price in the same product container
+      const priceLocator = this.page.locator(
+        `.product-details:has(a[data-product_name="${productName}"]) .price`
+      );
+
+      const priceText = (await priceLocator.locator(`//bdi`).last().textContent())?.trim() || '';
+      console.log("Product = " + productName);
+      console.log("Price = " + priceText);
+      // Scroll to and click the button
       await addButton.scrollIntoViewIfNeeded();
       await addButton.click();
 
-      // Wait for product-added confirmation (custom locator from your page object)
-      await this.productAddedText.waitFor({ state: 'visible', timeout: 5000 })  ;
+      // Wait for "added" confirmation (your custom locator)
+      await this.productAddedText.waitFor({ state: 'visible', timeout: 5000 });
 
-      addedProducts.push(productName);
+      // Store both name + price
+      addedProducts.push({ name: productName, price: priceText });
     }
 
     return addedProducts;
-  }
-  
-  async clickCart(){
-    await this.waitForPageLoaded();
-    await this.cartIcon.click();
-    await this.waitForPageLoaded();
-  }
+  }  
+
+  async clickRandomProductImage(): Promise< string > {
+    // Find all products
+    const count = await this.productContentImage.count();
+
+    if (count === 0) {
+      throw new Error("No product found on the page.");
+    }
+
+    // Pick unique random index
+    const selectedIndex = (Math.floor(Math.random() * count));
+
+    // Identify the random product image
+    const productImage = this.productContentImage.nth(selectedIndex);
+    // From that image, locate the closest parent .content-product
+    const productContainer = productImage.locator('xpath=ancestor::div[contains(@class, "content-product")]');
+
+    // Get the title text within that container
+    const productName = await productContainer.locator('.product-title a').innerText();
+    console.log(`Product title for image ${selectedIndex}: ${productName}`);
+    productImage.click();
+    return productName;
+  }    
 }
